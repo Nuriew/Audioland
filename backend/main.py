@@ -14,6 +14,8 @@ from slowapi.errors import RateLimitExceeded
 
 app = FastAPI()
 
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
 # Rate limiter
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
