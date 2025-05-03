@@ -1,0 +1,22 @@
+@media screen and (max-width: 495px) {
+    
+    .contact-form {
+        width: 85%;
+      }
+      
+      .contact-form label {
+        margin-bottom: -50px;
+      }
+      
+      .contact-form input {
+        width: 90%;
+        height: 10px;
+        margin-bottom: 30px;
+      }
+    
+      .contact-form textarea {
+        max-width: 92%;
+        min-width: 92%;
+        margin-top: 55px;
+      }
+  }
