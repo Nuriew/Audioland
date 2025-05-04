@@ -19,7 +19,7 @@ function Tiktok() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/tiktok', {
+      const response = await fetch('http://173.249.60.195:5000/api/tiktok', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: link }),
