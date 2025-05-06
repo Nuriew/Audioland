@@ -7,7 +7,6 @@ set -e
 cd frontend
 npm install
 npm run build
-serve -s build
 
 # FastAPI başlat
 cd ../backend
