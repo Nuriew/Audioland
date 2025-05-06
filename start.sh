@@ -1,8 +1,12 @@
 #!/bin/bash
 
-# React başlat
+# Script bir hata alırsa durdur
+set -e
+
+# React build
 cd frontend
-npm build run &
+npm install
+npm run build
 
 # FastAPI başlat
 cd ../backend
