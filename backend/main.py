@@ -17,7 +17,7 @@ app = FastAPI()
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Güvenlik için burada sadece kendi domainini de kullanabilirsin
+    allow_origins=["*"],  # Güvenlik için burada sadece kendi domainini kullanman önerilir
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -47,7 +47,7 @@ DOWNLOAD_DIR = "downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 app.mount("/downloads", StaticFiles(directory=DOWNLOAD_DIR), name="downloads")
 
-# ✅ Güvenli domain kontrolü
+# Güvenli domain kontrolü
 def is_valid_url(url: str, allowed_domains: list):
     try:
         parsed = urlparse(url)
@@ -55,7 +55,7 @@ def is_valid_url(url: str, allowed_domains: list):
     except Exception:
         return False
 
-# 🔄 Ortak indirme fonksiyonu
+# Ortak indirme fonksiyonu
 async def process_download(url: str, platform: str):
     domain_map = {
         "instagram": ["instagram.com"],
@@ -85,28 +85,28 @@ async def process_download(url: str, platform: str):
     else:
         raise HTTPException(status_code=500, detail=".mp3 dosyası oluşturulamadı")
 
-# 📥 API endpoint'leri
+# API endpoint'leri
 @app.post("/api/instagram")
 @limiter.limit("5/minute")
-async def download_instagram(data: VideoURL):
+async def download_instagram(request: Request, data: VideoURL):
     return await process_download(data.url, "instagram")
 
 @app.post("/api/tiktok")
 @limiter.limit("5/minute")
-async def download_tiktok(data: VideoURL):
+async def download_tiktok(request: Request, data: VideoURL):
     return await process_download(data.url, "tiktok")
 
 @app.post("/api/youtube")
 @limiter.limit("5/minute")
-async def download_youtube(data: VideoURL):
+async def download_youtube(request: Request, data: VideoURL):
     return await process_download(data.url, "youtube")
 
 @app.post("/api/pinterest")
 @limiter.limit("5/minute")
-async def download_pinterest(data: VideoURL):
+async def download_pinterest(request: Request, data: VideoURL):
     return await process_download(data.url, "pinterest")
 
-# 🧲 Dosya indirme
+# Dosya indirme endpoint
 @app.get("/download-file/{filename}")
 def download_file(filename: str):
     file_path = os.path.join(DOWNLOAD_DIR, filename)
