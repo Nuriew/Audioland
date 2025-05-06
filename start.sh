@@ -2,7 +2,7 @@
 
 # React başlat
 cd frontend
-npm start &
+npm build run &
 
 # FastAPI başlat
 cd ../backend
