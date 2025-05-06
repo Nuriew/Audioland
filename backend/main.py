@@ -14,10 +14,14 @@ from slowapi.errors import RateLimitExceeded
 
 app = FastAPI()
 
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
-@app.get("/")
-def read_index():
-    return FileResponse("static/index.html")
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Güvenlik için burada sadece kendi domainini de kullanabilirsin
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Rate limiter
 limiter = Limiter(key_func=get_remote_address)
@@ -27,14 +31,12 @@ app.state.limiter = limiter
 async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
     return JSONResponse(status_code=429, content={"message": "Çok fazla istek gönderdiniz. Lütfen sonra tekrar deneyin."})
 
-# CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Statik dosyalar
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
+@app.get("/")
+def read_index():
+    return FileResponse("static/index.html")
 
 # Model
 class VideoURL(BaseModel):
@@ -45,7 +47,7 @@ DOWNLOAD_DIR = "downloads"
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 app.mount("/downloads", StaticFiles(directory=DOWNLOAD_DIR), name="downloads")
 
-# ✅ Güvenli domain kontrol fonksiyonu
+# ✅ Güvenli domain kontrolü
 def is_valid_url(url: str, allowed_domains: list):
     try:
         parsed = urlparse(url)
@@ -53,9 +55,8 @@ def is_valid_url(url: str, allowed_domains: list):
     except Exception:
         return False
 
-# 🎯 Ortak indirme fonksiyonu
+# 🔄 Ortak indirme fonksiyonu
 async def process_download(url: str, platform: str):
-    # Uygun domain listeleri
     domain_map = {
         "instagram": ["instagram.com"],
         "tiktok": ["tiktok.com"],
@@ -84,25 +85,25 @@ async def process_download(url: str, platform: str):
     else:
         raise HTTPException(status_code=500, detail=".mp3 dosyası oluşturulamadı")
 
-# 📥 Tüm platformlar için endpoint’ler
+# 📥 API endpoint'leri
 @app.post("/api/instagram")
 @limiter.limit("5/minute")
-async def download_instagram(data: VideoURL, request: Request):
+async def download_instagram(data: VideoURL):
     return await process_download(data.url, "instagram")
 
 @app.post("/api/tiktok")
 @limiter.limit("5/minute")
-async def download_tiktok(data: VideoURL, request: Request):
+async def download_tiktok(data: VideoURL):
     return await process_download(data.url, "tiktok")
 
 @app.post("/api/youtube")
 @limiter.limit("5/minute")
-async def download_youtube(data: VideoURL, request: Request):
+async def download_youtube(data: VideoURL):
     return await process_download(data.url, "youtube")
 
 @app.post("/api/pinterest")
 @limiter.limit("5/minute")
-async def download_pinterest(data: VideoURL, request: Request):
+async def download_pinterest(data: VideoURL):
     return await process_download(data.url, "pinterest")
 
 # 🧲 Dosya indirme
