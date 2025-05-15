@@ -32,7 +32,9 @@ async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded):
     return JSONResponse(status_code=429, content={"message": "Çok fazla istek gönderdiniz. Lütfen sonra tekrar deneyin."})
 
 # Statik dosyalar
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+from pathlib import Path
+app.mount("/", StaticFiles(directory=Path(__file__).parent.parent / "frontend" / "build", html=True), name="static")
+
 
 @app.get("/")
 def read_index():
