@@ -17,7 +17,7 @@ app = FastAPI()
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["hhttps://sowear.shop/"],  # Güvenlik için burada sadece kendi domainini kullanman önerilir
+    allow_origins=["https://sowear.shop/"],  # Güvenlik için burada sadece kendi domainini kullanman önerilir
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -83,7 +83,7 @@ async def process_download(url: str, platform: str):
     mp3_file = os.path.join(DOWNLOAD_DIR, f"{unique_id}.mp3")
 
     if os.path.exists(mp3_file):
-        return {"audioUrl": f"http://173.249.60.195:5000/download-file/{unique_id}.mp3"}
+        return {"audioUrl": f"https://173.249.60.195:5000/download-file/{unique_id}.mp3"}
     else:
         raise HTTPException(status_code=500, detail=".mp3 dosyası oluşturulamadı")
 
