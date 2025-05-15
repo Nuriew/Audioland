@@ -17,7 +17,7 @@ app = FastAPI()
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Güvenlik için burada sadece kendi domainini kullanman önerilir
+    allow_origins=["hhttps://sowear.shop/"],  # Güvenlik için burada sadece kendi domainini kullanman önerilir
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
