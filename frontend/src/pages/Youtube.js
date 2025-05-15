@@ -22,7 +22,7 @@ function Youtube() {
       const response = await fetch('https://173.249.60.195:5000/api/youtube', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ video_url: link }), 
+        body: JSON.stringify({ url: link }), 
       });
 
       const data = await response.json();
