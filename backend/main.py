@@ -74,10 +74,12 @@ async def process_download(url: str, platform: str):
 
     command = [
         "yt-dlp",
+        "--cookies", "ytbcookies.txt",
         "-x", "--audio-format", "mp3",
         "-o", output_template,
         url
     ]
+
 
     subprocess.run(command, check=True)
     mp3_file = os.path.join(DOWNLOAD_DIR, f"{unique_id}.mp3")
