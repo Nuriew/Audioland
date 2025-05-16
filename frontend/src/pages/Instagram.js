@@ -19,7 +19,7 @@ function Instagram() {
     }
 
     try {
-      const response = await fetch('http://173.249.60.195:5000/api/instagram', {
+      const response = await fetch('https://173.249.60.195:5000/api/instagram', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: link }),
